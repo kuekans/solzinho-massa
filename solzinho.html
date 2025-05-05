@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sol Fofo</title>
+  <style>
+    body {
+      margin: 0;
+      background: #aee2ff;
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .sun {
+      position: relative;
+      width: 200px;
+      height: 200px;
+      background: radial-gradient(circle, #ffd55c, #f9a602);
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      box-shadow: 0 0 100px #ffd000;
+    }
+
+    .eyes {
+      position: relative;
+      display: flex;
+      gap: 30px;
+    }
+
+    .eye {
+      width: 30px;
+      height: 30px;
+      background: white;
+      border-radius: 50%;
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      transition: all 0.2s; /* tempo para fechar o olho */
+    }
+
+    .pupil {
+      width: 12px;
+      height: 12px;
+      background: rgb(0, 0, 0);
+      border-radius: 50%;
+      transition: transform 0.1s;
+    }
+
+    .smile {
+      position: absolute;
+      bottom: 50px;
+      width: 20px;
+      height: 10px;
+      border-bottom: 4px solid #553205;
+      border-radius: 0 0 10px 10px;
+    }
+
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    /* piscada animation */
+    .eye.blink {
+      height: 5px; /* simulando o olho fechando */
+      background: rgba(0, 0, 0, 0); /* cor do olho fechado */
+    }
+  </style>
+</head>
+<body>
+  <div class="sun">
+    <div class="eyes">
+      <div class="eye" id="leftEye">
+        <div class="pupil" id="pupil1"></div>
+      </div>
+      <div class="eye" id="rightEye">
+        <div class="pupil" id="pupil2"></div>
+      </div>
+    </div>
+    <div class="smile"></div>
+  </div>
+
+  <script>
+    const pupil1 = document.getElementById('pupil1');
+    const pupil2 = document.getElementById('pupil2');
+    const leftEye = document.getElementById('leftEye');
+    const rightEye = document.getElementById('rightEye');
+
+    // faz a pupila seguir o cursor
+    document.addEventListener('mousemove', (e) => {
+      const x = e.clientX;
+      const y = e.clientY;
+      const eyes = [pupil1, pupil2];
+
+      eyes.forEach((pupil) => {
+        const rect = pupil.getBoundingClientRect();
+        const eyeCenterX = rect.left + rect.width / 2;
+        const eyeCenterY = rect.top + rect.height / 2;
+        const dx = x - eyeCenterX;
+        const dy = y - eyeCenterY;
+        const angle = Math.atan2(dy, dx);
+        const radius = 5;
+        const offsetX = Math.cos(angle) * radius;
+        const offsetY = Math.sin(angle) * radius;
+        pupil.style.transform = `translate(${offsetX}px, ${offsetY}px)`;
+      });
+    });
+
+    // função da piscada
+    function blink() {
+      leftEye.classList.add('blink');
+      rightEye.classList.add('blink');
+
+      setTimeout(() => {
+        leftEye.classList.remove('blink');
+        rightEye.classList.remove('blink');
+      }, 200); // duração da piscada
+    }
+
+    // piscar a cada 3-6 segundos randomly
+    setInterval(blink, Math.random() * 3000 + 3000);
+  </script>
+</body>
+</html>
